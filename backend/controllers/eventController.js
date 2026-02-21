@@ -104,7 +104,7 @@ const sendDiscordWebhook = async (event) => {
   }
 
   // Add event URL
-  const eventUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/events/${event._id}`;
+  const eventUrl = `${process.env.FRONTEND_URL}/events/${event._id}`;
   embed.fields.push({
     name: '🔗 Register Now',
     value: `[Click here to view and register](${eventUrl})`,
