@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 // Set base URL for API requests
-axios.defaults.baseURL = 'http://localhost:5000';
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
 
 // Add request interceptor to include token in headers
 axios.interceptors.request.use(
