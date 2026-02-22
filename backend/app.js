@@ -37,8 +37,6 @@ app.use(morgan('dev'));
 
 // Health check route
 app.get('/', (req, res) => {
-// Health check route
-app.get('/', (req, res) => {
   res.json({ 
     success: true, 
     message: 'Felicity Event Management API is running',
