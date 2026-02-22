@@ -1,12 +1,19 @@
 import axios from 'axios';
 
 // Set base URL for API requests
+const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+console.log('Axios baseURL configured as:', baseURL);
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: baseURL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // Add request interceptor to include token in headers
-axios.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -20,7 +27,7 @@ axios.interceptors.request.use(
 );
 
 // Add response interceptor to handle errors
-axios.interceptors.response.use(
+api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
@@ -33,4 +40,4 @@ axios.interceptors.response.use(
   }
 );
 
-export default axios;
+export default api;

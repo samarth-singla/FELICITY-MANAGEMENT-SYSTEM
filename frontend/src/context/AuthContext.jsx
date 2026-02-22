@@ -16,8 +16,6 @@ export const AuthProvider = ({ children }) => {
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
-      // Set axios default authorization header
-      axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
     }
     setLoading(false);
   }, []);
@@ -39,9 +37,6 @@ export const AuthProvider = ({ children }) => {
       // Persist to localStorage
       localStorage.setItem('token', authToken);
       localStorage.setItem('user', JSON.stringify(userData));
-
-      // Set axios default authorization header
-      axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
 
       // Check if Participant needs onboarding
       const needsOnboarding = 
@@ -66,9 +61,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
 
-    // Remove axios authorization header
-    delete axios.defaults.headers.common['Authorization'];
-
     // Redirect to login page
     window.location.href = '/login';
   };
@@ -87,9 +79,6 @@ export const AuthProvider = ({ children }) => {
       // Persist to localStorage
       localStorage.setItem('token', authToken);
       localStorage.setItem('user', JSON.stringify(registeredUser));
-
-      // Set axios default authorization header
-      axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
 
       return { success: true, user: registeredUser };
     } catch (error) {
