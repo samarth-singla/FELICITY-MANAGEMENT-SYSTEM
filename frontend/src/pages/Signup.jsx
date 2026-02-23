@@ -9,7 +9,7 @@ const Signup = () => {
     email: '',
     password: '',
     participantType: 'IIIT',
-    collegeName: '',
+    collegeName: 'IIIT Hyderabad',
     contactNumber: '',
   });
   const [error, setError] = useState('');
@@ -19,16 +19,34 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    
+    // Auto-fill college name when participant type is IIIT
+    if (name === 'participantType') {
+      setFormData({
+        ...formData,
+        [name]: value,
+        collegeName: value === 'IIIT' ? 'IIIT Hyderabad' : '',
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    // Validate IIIT email
+    if (formData.participantType === 'IIIT' && !formData.email.endsWith('@iiit.ac.in')) {
+      setError('IIIT participants must use an @iiit.ac.in email address');
+      setLoading(false);
+      return;
+    }
 
     // Add role as Participant
     const userData = {
@@ -161,22 +179,24 @@ const Signup = () => {
           )}
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px' }}>College Name:</label>
-          <input
-            type="text"
-            name="collegeName"
-            value={formData.collegeName}
-            onChange={handleChange}
-            required
-            style={{ 
-              width: '100%', 
-              padding: '8px', 
-              borderRadius: '4px',
-              border: '1px solid #ccc'
-            }}
-          />
-        </div>
+        {formData.participantType === 'Non-IIIT' && (
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>College Name:</label>
+            <input
+              type="text"
+              name="collegeName"
+              value={formData.collegeName}
+              onChange={handleChange}
+              required
+              style={{ 
+                width: '100%', 
+                padding: '8px', 
+                borderRadius: '4px',
+                border: '1px solid #ccc'
+              }}
+            />
+          </div>
+        )}
 
         <div style={{ marginBottom: '15px' }}>
           <label style={{ display: 'block', marginBottom: '5px' }}>Contact Number:</label>

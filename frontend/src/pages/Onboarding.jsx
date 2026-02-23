@@ -16,6 +16,7 @@ const Onboarding = () => {
   // User selections
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [selectedOrganizers, setSelectedOrganizers] = useState([]);
+  const [customInterest, setCustomInterest] = useState('');
 
   // Available interests
   const availableInterests = [
@@ -60,6 +61,18 @@ const Onboarding = () => {
     } else {
       setSelectedInterests([...selectedInterests, interest]);
     }
+  };
+
+  const addCustomInterest = () => {
+    const trimmedInterest = customInterest.trim();
+    if (trimmedInterest && !selectedInterests.includes(trimmedInterest)) {
+      setSelectedInterests([...selectedInterests, trimmedInterest]);
+      setCustomInterest('');
+    }
+  };
+
+  const removeInterest = (interest) => {
+    setSelectedInterests(selectedInterests.filter(i => i !== interest));
   };
 
   const toggleOrganizer = (organizerId) => {
@@ -261,9 +274,91 @@ const Onboarding = () => {
                 ))}
               </div>
 
-              <p style={{ color: '#999', fontSize: '13px', fontStyle: 'italic' }}>
-                Selected: {selectedInterests.length} interest{selectedInterests.length !== 1 ? 's' : ''}
-              </p>
+              {/* Custom Interest Input */}
+              <div style={{ marginTop: '20px', marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: '#333' }}>
+                  Add Custom Interest:
+                </label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    value={customInterest}
+                    onChange={(e) => setCustomInterest(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addCustomInterest()}
+                    placeholder="Enter a custom interest..."
+                    style={{
+                      flex: 1,
+                      padding: '10px 14px',
+                      border: '2px solid #dee2e6',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      outline: 'none'
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={addCustomInterest}
+                    disabled={!customInterest.trim()}
+                    style={{
+                      padding: '10px 20px',
+                      backgroundColor: customInterest.trim() ? '#667eea' : '#dee2e6',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: customInterest.trim() ? 'pointer' : 'not-allowed',
+                      fontSize: '14px',
+                      fontWeight: '500'
+                    }}
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+
+              {/* Selected Interests Display */}
+              {selectedInterests.length > 0 && (
+                <div style={{ marginTop: '20px' }}>
+                  <p style={{ fontSize: '14px', fontWeight: '500', color: '#333', marginBottom: '10px' }}>
+                    Selected Interests ({selectedInterests.length}):
+                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {selectedInterests.map((interest) => (
+                      <div
+                        key={interest}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '6px 12px',
+                          backgroundColor: '#667eea',
+                          color: 'white',
+                          borderRadius: '20px',
+                          fontSize: '13px',
+                          fontWeight: '500'
+                        }}
+                      >
+                        {interest}
+                        <button
+                          onClick={() => removeInterest(interest)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'white',
+                            cursor: 'pointer',
+                            padding: '0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginLeft: '2px'
+                          }}
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
