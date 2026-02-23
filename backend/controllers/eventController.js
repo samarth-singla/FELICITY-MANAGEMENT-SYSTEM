@@ -581,21 +581,36 @@ exports.registerForEvent = asyncHandler(async (req, res, next) => {
 
     // For FREE events: Generate QR and send email immediately
     if (!isPaidEvent) {
+      console.log('🆓 Free event - generating QR code immediately for:', registration.ticketId);
       // Generate QR code
       const qrData = generateTicketQRData(registration, event, registration.participant);
-      const qrCodeDataUrl = await generateQRCode(qrData);
-      registration.qrCode = qrCodeDataUrl;
-      await registration.save();
-
-      // Send ticket email
+      console.log('📊 QR Data:', qrData);
+      
       try {
-        await sendTicketEmail(registration, event, registration.participant, qrCodeDataUrl);
-        registration.emailSent = true;
-        registration.emailSentAt = new Date();
+        const qrCodeDataUrl = await generateQRCode(qrData);
+        console.log('✅ QR code generated, length:', qrCodeDataUrl ? qrCodeDataUrl.length : 0);
+        registration.qrCode = qrCodeDataUrl;
         await registration.save();
-      } catch (emailError) {
-        console.error('Error sending ticket email:', emailError);
-        // Don't fail the registration if email fails
+        console.log('💾 QR code saved to registration');
+
+        // Send ticket email
+        try {
+          const emailResult = await sendTicketEmail(registration, event, registration.participant, qrCodeDataUrl);
+          if (emailResult.success) {
+            registration.emailSent = true;
+            registration.emailSentAt = new Date();
+            await registration.save();
+            console.log('✅ Ticket email sent successfully');
+          } else {
+            console.error('❌ Email sending failed:', emailResult.error);
+          }
+        } catch (emailError) {
+          console.error('❌ Error sending ticket email:', emailError);
+          // Don't fail the registration if email fails
+        }
+      } catch (qrError) {
+        console.error('❌ Error generating QR code:', qrError);
+        // Don't fail the registration if QR fails
       }
     }
     // For PAID events: Don't generate QR or send email yet (wait for organizer approval)
@@ -675,21 +690,36 @@ exports.registerForEvent = asyncHandler(async (req, res, next) => {
 
     // For FREE events: Generate QR and send email immediately
     if (!isPaidEvent) {
+      console.log('🆓 Free merchandise event - generating QR code immediately for:', registration.ticketId);
       // Generate QR code
       const qrData = generateTicketQRData(registration, event, registration.participant);
-      const qrCodeDataUrl = await generateQRCode(qrData);
-      registration.qrCode = qrCodeDataUrl;
-      await registration.save();
-
-      // Send ticket email
+      console.log('📊 QR Data:', qrData);
+      
       try {
-        await sendTicketEmail(registration, event, registration.participant, qrCodeDataUrl);
-        registration.emailSent = true;
-        registration.emailSentAt = new Date();
+        const qrCodeDataUrl = await generateQRCode(qrData);
+        console.log('✅ QR code generated, length:', qrCodeDataUrl ? qrCodeDataUrl.length : 0);
+        registration.qrCode = qrCodeDataUrl;
         await registration.save();
-      } catch (emailError) {
-        console.error('Error sending ticket email:', emailError);
-        // Don't fail the registration if email fails
+        console.log('💾 QR code saved to registration');
+
+        // Send ticket email
+        try {
+          const emailResult = await sendTicketEmail(registration, event, registration.participant, qrCodeDataUrl);
+          if (emailResult.success) {
+            registration.emailSent = true;
+            registration.emailSentAt = new Date();
+            await registration.save();
+            console.log('✅ Ticket email sent successfully');
+          } else {
+            console.error('❌ Email sending failed:', emailResult.error);
+          }
+        } catch (emailError) {
+          console.error('❌ Error sending ticket email:', emailError);
+          // Don't fail the registration if email fails
+        }
+      } catch (qrError) {
+        console.error('❌ Error generating QR code:', qrError);
+        // Don't fail the registration if QR fails
       }
     }
     // For PAID events: Don't generate QR or send email yet

@@ -249,10 +249,22 @@ exports.approvePayment = asyncHandler(async (req, res, next) => {
 
   // Generate QR code if not exists
   if (!registration.qrCode) {
+    console.log('🔄 Generating QR code for registration:', registration.ticketId);
     const qrData = generateTicketQRData(registration, registration.event, registration.participant);
-    const qrCodeDataUrl = await generateQRCode(qrData);
-    registration.qrCode = qrCodeDataUrl;
-    await registration.save();
+    console.log('📊 QR Data:', qrData);
+    
+    try {
+      const qrCodeDataUrl = await generateQRCode(qrData);
+      console.log('✅ QR code generated successfully, length:', qrCodeDataUrl ? qrCodeDataUrl.length : 0);
+      registration.qrCode = qrCodeDataUrl;
+      await registration.save();
+      console.log('💾 QR code saved to registration');
+    } catch (qrError) {
+      console.error('❌ Error generating QR code:', qrError);
+      return next(new ErrorResponse('Failed to generate QR code', 500));
+    }
+  } else {
+    console.log('✓ QR code already exists for registration:', registration.ticketId);
   }
 
   // Send payment approved email

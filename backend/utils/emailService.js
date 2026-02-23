@@ -237,7 +237,19 @@ const sendTicketEmail = async (registration, event, participant, qrCodeDataUrl) 
   
   // Extract base64 data from data URL
   // Format: data:image/png;base64,iVBORw0KG...
+  if (!qrCodeDataUrl) {
+    console.error('❌ QR code data URL is missing for registration:', registration.ticketId);
+    return { success: false, error: 'QR code not generated' };
+  }
+  
   const base64Data = qrCodeDataUrl.split(',')[1];
+  
+  if (!base64Data) {
+    console.error('❌ Failed to extract base64 from QR code data URL');
+    return { success: false, error: 'Invalid QR code format' };
+  }
+  
+  console.log('📧 Sending ticket email with QR code attachment to:', participant.email);
   
   return await sendEmail({
     to: participant.email,
@@ -260,7 +272,19 @@ const sendPaymentApprovedEmail = async (registration, event, participant, qrCode
   const html = generatePaymentApprovedEmailHTML(registration, event, participant, qrCodeDataUrl);
   
   // Extract base64 data from data URL
+  if (!qrCodeDataUrl) {
+    console.error('❌ QR code data URL is missing for registration:', registration.ticketId);
+    return { success: false, error: 'QR code not generated' };
+  }
+  
   const base64Data = qrCodeDataUrl.split(',')[1];
+  
+  if (!base64Data) {
+    console.error('❌ Failed to extract base64 from QR code data URL');
+    return { success: false, error: 'Invalid QR code format' };
+  }
+  
+  console.log('📧 Sending payment approval email with QR code attachment to:', participant.email);
   
   return await sendEmail({
     to: participant.email,
