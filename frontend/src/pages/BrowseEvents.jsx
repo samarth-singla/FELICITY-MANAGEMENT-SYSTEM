@@ -34,6 +34,8 @@ const BrowseEvents = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedEligibility, setSelectedEligibility] = useState('All');
   const [showFollowedOnly, setShowFollowedOnly] = useState(false);
+  const [dateRangeStart, setDateRangeStart] = useState('');
+  const [dateRangeEnd, setDateRangeEnd] = useState('');
 
   const categories = [
     'All',
@@ -58,7 +60,7 @@ const BrowseEvents = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [searchQuery, selectedType, selectedCategory, selectedEligibility, showFollowedOnly, events]);
+  }, [searchQuery, selectedType, selectedCategory, selectedEligibility, showFollowedOnly, dateRangeStart, dateRangeEnd, events]);
 
   const fetchUserData = async () => {
     try {
@@ -101,11 +103,16 @@ const BrowseEvents = () => {
   const applyFilters = () => {
     let filtered = [...events];
 
-    // Filter by search query (name)
+    // Filter by search query (fuzzy/partial matching on event name and organizer name)
     if (searchQuery.trim()) {
-      filtered = filtered.filter((event) =>
-        event.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((event) => {
+        const eventName = event.name.toLowerCase();
+        const organizerName = event.organizer?.organizerName?.toLowerCase() || 
+                               event.organizer?.firstName?.toLowerCase() + ' ' + event.organizer?.lastName?.toLowerCase() || 
+                               '';
+        return eventName.includes(query) || organizerName.includes(query);
+      });
     }
 
     // Filter by type
@@ -118,20 +125,29 @@ const BrowseEvents = () => {
       filtered = filtered.filter((event) => event.category === selectedCategory);
     }
 
-    // Filter by eligibility (based on registration fee and event type)
+    // Filter by eligibility
     if (selectedEligibility !== 'All') {
-      // In a real implementation, this would check event.eligibility field
-      // For now, we'll use a proxy logic
       filtered = filtered.filter((event) => {
-        // You can add an eligibility field to events or use other criteria
-        // For demo: let's say free events are open to all, paid might be restricted
+        // Use the actual eligibility field from the event
+        const eventEligibility = event.eligibility || 'All';
         if (selectedEligibility === 'IIIT') {
-          return event.registrationFee === 0; // Example logic
+          return eventEligibility === 'IIIT' || eventEligibility === 'All';
         } else if (selectedEligibility === 'Non-IIIT') {
-          return event.registrationFee > 0; // Example logic
+          return eventEligibility === 'Non-IIIT' || eventEligibility === 'All';
         }
         return true;
       });
+    }
+
+    // Filter by date range
+    if (dateRangeStart) {
+      const startDate = new Date(dateRangeStart);
+      filtered = filtered.filter((event) => new Date(event.startDate) >= startDate);
+    }
+    if (dateRangeEnd) {
+      const endDate = new Date(dateRangeEnd);
+      endDate.setHours(23, 59, 59, 999); // Include the entire end date
+      filtered = filtered.filter((event) => new Date(event.startDate) <= endDate);
     }
 
     // Filter by followed clubs
@@ -232,7 +248,7 @@ const BrowseEvents = () => {
             />
             <input
               type="text"
-              placeholder="Search events by name..."
+              placeholder="Search events by name or organizer..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
@@ -384,6 +400,81 @@ const BrowseEvents = () => {
                       </span>
                     </label>
                   ))}
+                </div>
+              </div>
+
+              {/* Date Range Filter */}
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h4
+                  style={{
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    marginBottom: '0.75rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  Date Range
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div>
+                    <label style={{ fontSize: '0.75rem', color: '#6b7280', display: 'block', marginBottom: '0.25rem' }}>
+                      From
+                    </label>
+                    <input
+                      type="date"
+                      value={dateRangeStart}
+                      onChange={(e) => setDateRangeStart(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '0.5rem',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        fontSize: '0.875rem',
+                        color: '#333',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.75rem', color: '#6b7280', display: 'block', marginBottom: '0.25rem' }}>
+                      To
+                    </label>
+                    <input
+                      type="date"
+                      value={dateRangeEnd}
+                      onChange={(e) => setDateRangeEnd(e.target.value)}
+                      min={dateRangeStart}
+                      style={{
+                        width: '100%',
+                        padding: '0.5rem',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        fontSize: '0.875rem',
+                        color: '#333',
+                      }}
+                    />
+                  </div>
+                  {(dateRangeStart || dateRangeEnd) && (
+                    <button
+                      onClick={() => {
+                        setDateRangeStart('');
+                        setDateRangeEnd('');
+                      }}
+                      style={{
+                        padding: '0.5rem',
+                        backgroundColor: '#f3f4f6',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        fontSize: '0.75rem',
+                        color: '#6b7280',
+                        cursor: 'pointer',
+                        fontWeight: '500',
+                      }}
+                    >
+                      Clear Date Range
+                    </button>
+                  )}
                 </div>
               </div>
 

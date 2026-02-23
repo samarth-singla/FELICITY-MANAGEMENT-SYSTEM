@@ -37,6 +37,7 @@ const CreateEvent = () => {
     venue: '',
     imageUrl: '',
     tags: '',
+    eligibility: 'All',
   });
 
   // Normal Event: Custom Form Builder
@@ -378,6 +379,31 @@ const CreateEvent = () => {
                     {cat}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            {/* Eligibility */}
+            <div>
+              <label style={{ display: 'block', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
+                Eligibility *
+              </label>
+              <select
+                name="eligibility"
+                value={formData.eligibility}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #d1d5db',
+                  backgroundColor: 'white',
+                  borderRadius: '8px',
+                  fontSize: '1rem',
+                  color: '#333',
+                }}
+              >
+                <option value="All">Open to All</option>
+                <option value="IIIT">IIIT Students Only</option>
+                <option value="Non-IIIT">Non-IIIT Students Only</option>
               </select>
             </div>
 

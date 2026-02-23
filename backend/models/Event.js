@@ -174,6 +174,14 @@ const eventSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    eligibility: {
+      type: String,
+      enum: {
+        values: ['All', 'IIIT', 'Non-IIIT'],
+        message: 'Eligibility must be one of: All, IIIT, Non-IIIT',
+      },
+      default: 'All',
+    },
   },
   {
     timestamps: true,

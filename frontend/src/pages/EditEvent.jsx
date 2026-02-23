@@ -44,6 +44,7 @@ const EditEvent = () => {
     imageUrl: '',
     tags: '',
     isPublished: false,
+    eligibility: 'All',
   });
 
   const categories = [
@@ -110,6 +111,7 @@ const EditEvent = () => {
         imageUrl: eventData.imageUrl || '',
         tags: eventData.tags ? eventData.tags.join(', ') : '',
         isPublished: eventData.isPublished || false,
+        eligibility: eventData.eligibility || 'All',
       });
 
       setLoading(false);
@@ -223,6 +225,7 @@ const EditEvent = () => {
         updateData.imageUrl = formData.imageUrl;
         updateData.tags = formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
         updateData.isPublished = formData.isPublished;
+        updateData.eligibility = formData.eligibility;
       } else if (eventStatus === 'published') {
         // Published: only description, registrationDeadline, registrationLimit
         updateData.description = formData.description;
@@ -555,6 +558,44 @@ const EditEvent = () => {
               {categories.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
+            </select>
+          </div>
+
+          {/* Eligibility */}
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '8px',
+              fontWeight: '600',
+              color: '#374151',
+              fontSize: '14px'
+            }}>
+              {!isFieldEditable('eligibility') && <Lock size={16} />}
+              Eligibility <span style={{ color: '#ef4444' }}>*</span>
+              {!isFieldEditable('eligibility') && <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '400' }}>(Locked)</span>}
+            </label>
+            <select
+              name="eligibility"
+              value={formData.eligibility}
+              onChange={handleInputChange}
+              disabled={!isFieldEditable('eligibility')}
+              required
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #d1d5db',
+                borderRadius: '8px',
+                fontSize: '14px',
+                backgroundColor: isFieldEditable('eligibility') ? 'white' : '#f3f4f6',
+                color: isFieldEditable('eligibility') ? '#111827' : '#6b7280',
+                cursor: isFieldEditable('eligibility') ? 'pointer' : 'not-allowed'
+              }}
+            >
+              <option value="All">Open to All</option>
+              <option value="IIIT">IIIT Students Only</option>
+              <option value="Non-IIIT">Non-IIIT Students Only</option>
             </select>
           </div>
 
