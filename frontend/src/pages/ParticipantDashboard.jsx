@@ -214,13 +214,48 @@ const ParticipantDashboard = () => {
     <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '2rem 1.5rem' }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         {/* Header */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>
-            My Events Dashboard
-          </h1>
-          <p style={{ color: '#6b7280', fontSize: '1rem' }}>
-            Welcome back, {user?.firstName}! Here's your event activity.
-          </p>
+        <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>
+              My Events Dashboard
+            </h1>
+            <p style={{ color: '#6b7280', fontSize: '1rem' }}>
+              Welcome back, {user?.firstName}! Here's your event activity.
+            </p>
+          </div>
+          
+          {/* View Tickets Button */}
+          <button
+            onClick={() => navigate('/participant/my-registrations')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 24px',
+              backgroundColor: '#667eea',
+              color: 'white',
+              border: 'none',
+              borderRadius: '10px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              boxShadow: '0 4px 6px rgba(102, 126, 234, 0.3)',
+              transition: 'all 0.3s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#5a67d8';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 12px rgba(102, 126, 234, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#667eea';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(102, 126, 234, 0.3)';
+            }}
+          >
+            <Ticket size={20} />
+            View All My Tickets & QR Codes
+          </button>
         </div>
 
         {/* Stats Cards */}
@@ -282,6 +317,41 @@ const ParticipantDashboard = () => {
                 </p>
               </div>
               <CheckCircle size={40} style={{ color: '#17a2b8', opacity: 0.6 }} />
+            </div>
+          </div>
+
+          {/* My Registrations Button Card */}
+          <div
+            onClick={() => navigate('/participant/my-registrations')}
+            style={{
+              backgroundColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              padding: '1.5rem',
+              borderRadius: '12px',
+              boxShadow: '0 4px 6px rgba(102, 126, 234, 0.3)',
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              border: 'none',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 12px rgba(102, 126, 234, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(102, 126, 234, 0.3)';
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.9)', marginBottom: '0.5rem' }}>
+                  View All Tickets
+                </p>
+                <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white' }}>
+                  My Registrations
+                </p>
+              </div>
+              <Ticket size={40} style={{ color: 'white', opacity: 0.9 }} />
             </div>
           </div>
         </div>
