@@ -292,7 +292,9 @@ const Onboarding = () => {
                       border: '2px solid #dee2e6',
                       borderRadius: '6px',
                       fontSize: '14px',
-                      outline: 'none'
+                      outline: 'none',
+                      backgroundColor: 'white',
+                      color: '#333'
                     }}
                   />
                   <button

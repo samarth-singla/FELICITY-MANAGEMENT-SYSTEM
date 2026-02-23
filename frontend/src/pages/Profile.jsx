@@ -473,7 +473,8 @@ const Profile = () => {
                         fontWeight: '600',
                         border: '1px solid #dee2e6',
                         borderRadius: '4px',
-                        padding: '4px 8px'
+                        padding: '4px 8px',
+                        backgroundColor: 'white'
                       }}
                     />
                   ) : (
@@ -525,7 +526,8 @@ const Profile = () => {
                         fontWeight: '600',
                         border: '1px solid #dee2e6',
                         borderRadius: '4px',
-                        padding: '4px 8px'
+                        padding: '4px 8px',
+                        backgroundColor: 'white'
                       }}
                     />
                   ) : (
@@ -608,7 +610,8 @@ const Profile = () => {
                         fontWeight: '600',
                         border: '1px solid #dee2e6',
                         borderRadius: '4px',
-                        padding: '4px 8px'
+                        padding: '4px 8px',
+                        backgroundColor: 'white'
                       }}
                     />
                   ) : (
@@ -660,7 +663,8 @@ const Profile = () => {
                         fontWeight: '600',
                         border: '1px solid #dee2e6',
                         borderRadius: '4px',
-                        padding: '4px 8px'
+                        padding: '4px 8px',
+                        backgroundColor: 'white'
                       }}
                     />
                   ) : (
@@ -1045,6 +1049,7 @@ const Profile = () => {
                     borderRadius: '6px',
                     fontSize: '14px',
                     color: '#1f2937',
+                    backgroundColor: 'white',
                     boxSizing: 'border-box'
                   }}
                 />
@@ -1073,6 +1078,7 @@ const Profile = () => {
                     borderRadius: '6px',
                     fontSize: '14px',
                     color: '#1f2937',
+                    backgroundColor: 'white',
                     boxSizing: 'border-box'
                   }}
                 />
@@ -1100,6 +1106,7 @@ const Profile = () => {
                     borderRadius: '6px',
                     fontSize: '14px',
                     color: '#1f2937',
+                    backgroundColor: 'white',
                     boxSizing: 'border-box'
                   }}
                 />

@@ -100,7 +100,9 @@ const Signup = () => {
               width: '100%', 
               padding: '8px', 
               borderRadius: '4px',
-              border: '1px solid #ccc'
+              border: '1px solid #ccc',
+              backgroundColor: 'white',
+              color: '#333'
             }}
           />
         </div>
@@ -117,7 +119,9 @@ const Signup = () => {
               width: '100%', 
               padding: '8px', 
               borderRadius: '4px',
-              border: '1px solid #ccc'
+              border: '1px solid #ccc',
+              backgroundColor: 'white',
+              color: '#333'
             }}
           />
         </div>
@@ -134,7 +138,9 @@ const Signup = () => {
               width: '100%', 
               padding: '8px', 
               borderRadius: '4px',
-              border: '1px solid #ccc'
+              border: '1px solid #ccc',
+              backgroundColor: 'white',
+              color: '#333'
             }}
           />
         </div>
@@ -152,7 +158,9 @@ const Signup = () => {
               width: '100%', 
               padding: '8px', 
               borderRadius: '4px',
-              border: '1px solid #ccc'
+              border: '1px solid #ccc',
+              backgroundColor: 'white',
+              color: '#333'
             }}
           />
         </div>
@@ -168,7 +176,9 @@ const Signup = () => {
               width: '100%', 
               padding: '8px', 
               borderRadius: '4px',
-              border: '1px solid #ccc'
+              border: '1px solid #ccc',
+              backgroundColor: 'white',
+              color: '#333'
             }}
           >
             <option value="IIIT">IIIT</option>
@@ -192,7 +202,9 @@ const Signup = () => {
                 width: '100%', 
                 padding: '8px', 
                 borderRadius: '4px',
-                border: '1px solid #ccc'
+                border: '1px solid #ccc',
+                backgroundColor: 'white',
+                color: '#333'
               }}
             />
           </div>
@@ -210,7 +222,9 @@ const Signup = () => {
               width: '100%', 
               padding: '8px', 
               borderRadius: '4px',
-              border: '1px solid #ccc'
+              border: '1px solid #ccc',
+              backgroundColor: 'white',
+              color: '#333'
             }}
           />
         </div>

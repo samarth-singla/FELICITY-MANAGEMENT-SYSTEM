@@ -689,6 +689,7 @@ const EventDetails = () => {
                           borderRadius: '8px',
                           fontSize: '1rem',
                           color: '#333',
+                          backgroundColor: 'white',
                         }}
                       />
                       <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem' }}>

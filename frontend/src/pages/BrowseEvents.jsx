@@ -258,6 +258,7 @@ const BrowseEvents = () => {
                 borderRadius: '8px',
                 fontSize: '1rem',
                 color: '#333',
+                backgroundColor: 'white',
               }}
             />
           </div>
@@ -348,6 +349,7 @@ const BrowseEvents = () => {
                     borderRadius: '6px',
                     fontSize: '0.875rem',
                     color: '#333',
+                    backgroundColor: 'white',
                   }}
                 >
                   {categories.map((cat) => (
@@ -433,6 +435,7 @@ const BrowseEvents = () => {
                         borderRadius: '6px',
                         fontSize: '0.875rem',
                         color: '#333',
+                        backgroundColor: 'white',
                       }}
                     />
                   </div>
@@ -452,6 +455,7 @@ const BrowseEvents = () => {
                         borderRadius: '6px',
                         fontSize: '0.875rem',
                         color: '#333',
+                        backgroundColor: 'white',
                       }}
                     />
                   </div>
