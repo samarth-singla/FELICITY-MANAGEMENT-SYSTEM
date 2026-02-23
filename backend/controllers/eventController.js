@@ -202,11 +202,33 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
   }
 
   // Create event (will be saved as draft by default: isPublished: false)
-  const event = await Event.create(req.body);
+  let event = await Event.create(req.body);
+
+  // Populate organizer details with Discord webhook URL
+  event = await Event.findById(event._id)
+    .populate('organizer', 'firstName lastName organizerName email category contactEmail discordWebhookUrl');
+
+  // Send Discord webhook notification if event is being published
+  if (event.isPublished && event.organizer.discordWebhookUrl) {
+    console.log('🔔 New event being published - attempting Discord webhook notification...');
+    try {
+      await sendDiscordWebhook(event);
+    } catch (webhookError) {
+      // Log error but don't fail the creation
+      console.error('❌ Discord webhook notification failed:', webhookError.message);
+    }
+  } else {
+    if (!event.isPublished) {
+      console.log('ℹ️ Event created as draft - no Discord notification sent');
+    }
+    if (event.isPublished && !event.organizer.discordWebhookUrl) {
+      console.log('ℹ️ No Discord webhook URL configured for this organizer');
+    }
+  }
 
   res.status(201).json({
     success: true,
-    message: `${req.body.type} event created successfully as draft`,
+    message: `${req.body.type} event created successfully${event.isPublished ? ' and published' : ' as draft'}`,
     data: event,
   });
 });
