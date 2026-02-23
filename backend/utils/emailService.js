@@ -38,6 +38,11 @@ const sendEmail = async (options, retries = 3) => {
         html: options.html,
       };
 
+      // Add attachments if provided (for QR codes)
+      if (options.attachments && options.attachments.length > 0) {
+        msg.attachments = options.attachments;
+      }
+
       const result = await sgMail.send(msg);
       console.log(`✅ Email sent successfully via SendGrid (attempt ${attempt}/${retries}) to ${options.to}`);
       return { success: true, messageId: result[0].headers['x-message-id'] };
@@ -131,7 +136,7 @@ const generateTicketEmailHTML = (registration, event, participant, qrCodeDataUrl
             
             <div class="qr-code">
               <p style="color: #6b7280; margin-bottom: 10px;">Scan this QR code at the venue</p>
-              <img src="${qrCodeDataUrl}" alt="QR Code" width="200" height="200" />
+              <img src="cid:qrcode" alt="QR Code" width="200" height="200" />
             </div>
             
             <p style="text-align: center; font-size: 14px; color: #6b7280; margin-top: 20px;">
@@ -230,10 +235,23 @@ const generatePaymentApprovedEmailHTML = (registration, event, participant, qrCo
 const sendTicketEmail = async (registration, event, participant, qrCodeDataUrl) => {
   const html = generateTicketEmailHTML(registration, event, participant, qrCodeDataUrl);
   
+  // Extract base64 data from data URL
+  // Format: data:image/png;base64,iVBORw0KG...
+  const base64Data = qrCodeDataUrl.split(',')[1];
+  
   return await sendEmail({
     to: participant.email,
     subject: `Your Ticket for ${event.name} - ${registration.ticketId}`,
     html,
+    attachments: [
+      {
+        content: base64Data,
+        filename: 'qrcode.png',
+        type: 'image/png',
+        disposition: 'inline',
+        content_id: 'qrcode'
+      }
+    ]
   });
 };
 
@@ -241,10 +259,22 @@ const sendTicketEmail = async (registration, event, participant, qrCodeDataUrl) 
 const sendPaymentApprovedEmail = async (registration, event, participant, qrCodeDataUrl) => {
   const html = generatePaymentApprovedEmailHTML(registration, event, participant, qrCodeDataUrl);
   
+  // Extract base64 data from data URL
+  const base64Data = qrCodeDataUrl.split(',')[1];
+  
   return await sendEmail({
     to: participant.email,
     subject: `Payment Approved - ${event.name}`,
     html,
+    attachments: [
+      {
+        content: base64Data,
+        filename: 'qrcode.png',
+        type: 'image/png',
+        disposition: 'inline',
+        content_id: 'qrcode'
+      }
+    ]
   });
 };
 
