@@ -1,38 +1,68 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
-// Create transporter function (lazy loading)
-const getTransporter = () => {
-  return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.EMAIL_PORT) || 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
+// Initialize SendGrid with API key
+const initializeSendGrid = () => {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  
+  if (!apiKey) {
+    console.warn('⚠️ SENDGRID_API_KEY is not set. Email functionality will be disabled.');
+    return false;
+  }
+  
+  sgMail.setApiKey(apiKey);
+  console.log('✅ SendGrid initialized successfully');
+  return true;
 };
 
-// Send email
-const sendEmail = async (options) => {
-  try {
-    const transporter = getTransporter();
-    
-    const mailOptions = {
-      from: `${process.env.EMAIL_FROM_NAME || 'Felicity Events'} <${process.env.EMAIL_USER}>`,
-      to: options.to,
-      subject: options.subject,
-      html: options.html,
-      attachments: options.attachments || [],
-    };
+// Initialize on module load
+const isInitialized = initializeSendGrid();
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', info.messageId);
-    return { success: true, messageId: info.messageId };
-  } catch (error) {
-    console.error('Error sending email:', error);
-    return { success: false, error: error.message };
+// Send email with retry logic
+const sendEmail = async (options, retries = 3) => {
+  if (!isInitialized) {
+    console.error('❌ SendGrid not initialized. Email not sent.');
+    return { success: false, error: 'SendGrid API key not configured' };
   }
+
+  let lastError;
+  
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const msg = {
+        to: options.to,
+        from: {
+          email: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER,
+          name: process.env.EMAIL_FROM_NAME || 'Felicity Events'
+        },
+        subject: options.subject,
+        html: options.html,
+      };
+
+      const result = await sgMail.send(msg);
+      console.log(`✅ Email sent successfully via SendGrid (attempt ${attempt}/${retries}) to ${options.to}`);
+      return { success: true, messageId: result[0].headers['x-message-id'] };
+      
+    } catch (error) {
+      lastError = error;
+      console.error(`❌ SendGrid email failed (attempt ${attempt}/${retries}):`, {
+        error: error.message,
+        code: error.code,
+        recipient: options.to,
+        response: error.response?.body
+      });
+      
+      // If not the last retry, wait before retrying
+      if (attempt < retries) {
+        const delay = attempt * 2000; // Progressive delay: 2s, 4s
+        console.log(`⏳ Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  
+  // All retries failed
+  console.error('❌ Email send failed after all retries:', lastError.message);
+  return { success: false, error: lastError.message };
 };
 
 // Generate ticket email HTML

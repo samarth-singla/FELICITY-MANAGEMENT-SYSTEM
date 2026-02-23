@@ -55,10 +55,10 @@ server.listen(PORT, () => {
   
   // Debug email configuration
   console.log('Email Configuration:');
-  console.log('- EMAIL_HOST:', process.env.EMAIL_HOST);
-  console.log('- EMAIL_PORT:', process.env.EMAIL_PORT);
-  console.log('- EMAIL_USER:', process.env.EMAIL_USER);
-  console.log('- EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? 'SET' : 'NOT SET');
+  console.log('- Provider: SendGrid');
+  console.log('- API Key:', process.env.SENDGRID_API_KEY ? 'SET ✓' : 'NOT SET ✗');
+  console.log('- From Email:', process.env.SENDGRID_FROM_EMAIL || 'NOT SET');
+  console.log('- From Name:', process.env.EMAIL_FROM_NAME || 'Felicity Events');
 });
 
 // Handle unhandled promise rejections

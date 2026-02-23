@@ -108,6 +108,15 @@ exports.cancelRegistration = asyncHandler(async (req, res, next) => {
   // Decrement event registration count
   await registration.event.decrementRegistrations();
 
+  // For Merchandise events: Restore stock if payment was completed
+  if (registration.event.type === 'Merchandise' && 
+      registration.paymentStatus === 'completed' && 
+      registration.formData?.quantity) {
+    const quantity = registration.formData.quantity;
+    registration.event.stockQuantity += quantity;
+    await registration.event.save();
+  }
+
   // Delete the registration completely from database
   await Registration.findByIdAndDelete(req.params.id);
 
@@ -221,6 +230,22 @@ exports.approvePayment = asyncHandler(async (req, res, next) => {
   // Update payment status
   registration.paymentStatus = 'completed';
   await registration.save();
+
+  // For Merchandise events: Reduce stock when payment is approved
+  if (registration.event.type === 'Merchandise' && registration.formData?.quantity) {
+    const purchaseQuantity = registration.formData.quantity;
+    
+    // Check if stock is still available
+    if (registration.event.stockQuantity < purchaseQuantity) {
+      return next(new ErrorResponse(
+        `Insufficient stock. Only ${registration.event.stockQuantity} items available`,
+        400
+      ));
+    }
+    
+    registration.event.stockQuantity -= purchaseQuantity;
+    await registration.event.save();
+  }
 
   // Generate QR code if not exists
   if (!registration.qrCode) {

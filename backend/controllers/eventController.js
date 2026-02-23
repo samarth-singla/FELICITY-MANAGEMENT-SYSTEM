@@ -694,8 +694,11 @@ exports.registerForEvent = asyncHandler(async (req, res, next) => {
     }
     // For PAID events: Don't generate QR or send email yet
     
-    // Decrement stock quantity
-    event.stockQuantity -= purchaseQuantity;
+    // Decrement stock quantity only for FREE merchandise events
+    // For PAID merchandise, stock will be decremented when organizer approves payment
+    if (!isPaidEvent) {
+      event.stockQuantity -= purchaseQuantity;
+    }
     await event.incrementRegistrations();
 
     const message = isPaidEvent 
