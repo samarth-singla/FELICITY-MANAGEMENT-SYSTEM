@@ -37,9 +37,7 @@ const OrganizersList = () => {
   const fetchOrganizers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/users/organizers', {
-        params: { status: 'approved' }
-      });
+      const response = await axios.get('/api/users/organizers');
       setOrganizers(response.data.data);
       setLoading(false);
     } catch (err) {
@@ -115,7 +113,7 @@ const OrganizersList = () => {
             animation: 'spin 1s linear infinite',
             margin: '0 auto 20px'
           }} />
-          <p style={{ color: '#666' }}>Loading clubs...</p>
+          <p style={{ color: '#666' }}>Loading organizers...</p>
         </div>
       </div>
     );
@@ -196,7 +194,7 @@ const OrganizersList = () => {
             />
             <input
               type="text"
-              placeholder="Search clubs by name or description..."
+              placeholder="Search organizers by name or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
@@ -205,7 +203,9 @@ const OrganizersList = () => {
                 border: '1px solid #dee2e6',
                 borderRadius: '6px',
                 fontSize: '14px',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                backgroundColor: 'white',
+                color: '#333'
               }}
             />
           </div>
@@ -258,7 +258,7 @@ const OrganizersList = () => {
           color: '#666',
           fontSize: '14px'
         }}>
-          Found {filteredOrganizers.length} club{filteredOrganizers.length !== 1 ? 's' : ''}
+          Found {filteredOrganizers.length} organizer{filteredOrganizers.length !== 1 ? 's' : ''}
         </div>
 
         {/* Organizers Grid */}
@@ -272,7 +272,7 @@ const OrganizersList = () => {
           }}>
             <Building2 size={48} style={{ color: '#ccc', marginBottom: '16px' }} />
             <h3 style={{ color: '#666', fontSize: '18px', marginBottom: '8px' }}>
-              No Clubs Found
+              No Organizers Found
             </h3>
             <p style={{ color: '#999', fontSize: '14px' }}>
               Try adjusting your search or filters
