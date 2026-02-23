@@ -226,7 +226,7 @@ const ParticipantDashboard = () => {
           
           {/* View Tickets Button */}
           <button
-            onClick={() => navigate('/participant/my-registrations')}
+            onClick={() => navigate('/participant/registrations')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -317,41 +317,6 @@ const ParticipantDashboard = () => {
                 </p>
               </div>
               <CheckCircle size={40} style={{ color: '#17a2b8', opacity: 0.6 }} />
-            </div>
-          </div>
-
-          {/* My Registrations Button Card */}
-          <div
-            onClick={() => navigate('/participant/my-registrations')}
-            style={{
-              backgroundColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              padding: '1.5rem',
-              borderRadius: '12px',
-              boxShadow: '0 4px 6px rgba(102, 126, 234, 0.3)',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              border: 'none',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 12px rgba(102, 126, 234, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 6px rgba(102, 126, 234, 0.3)';
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.9)', marginBottom: '0.5rem' }}>
-                  View All Tickets
-                </p>
-                <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white' }}>
-                  My Registrations
-                </p>
-              </div>
-              <Ticket size={40} style={{ color: 'white', opacity: 0.9 }} />
             </div>
           </div>
         </div>
