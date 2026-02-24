@@ -1,0 +1,10 @@
+Check the website at - https://felicity-management-system.vercel.app/
+
+open https://felicity-management-system.onrender.com for backend reoot if website shows error logs
+
+
+Platforms used to deploy -
+Backed at - RENDER
+Frontend at - Vercel 
+
+Check complete code at github repo - https://github.com/samarth-singla/FELICITY-MANAGEMENT-SYSTEM
